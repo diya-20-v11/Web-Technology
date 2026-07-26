@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Registration Portal</title>
+    <style>
+        form {
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        body {
+            background: linear-gradient(110deg, rgb(25, 25, 72), rgb(12, 12, 49), rgb(32, 32, 122));
+            color: #f5f7fa;
+            font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+
+        a {
+            color: rgb(255, 197, 126);
+        }
+
+        fieldset {
+            margin: 4px;
+            border-bottom-right-radius: 15px;
+            border-top-left-radius: 15px;
+            text-align: cent;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 align="center">Employee Registration Form</h1><br>
+    <form action="welcome_To_homepage.html" method="get" target="_blank">
+
+        <fieldset>
+            <legend>Employee's Personal Information</legend>
+            <label for="f_name">Full Name:</label><br>
+            <input type="text" name="emp_name" id="f_name" required pattern="[A-Za-z ]{3,50}"><br><br>
+
+            <label for="mail">Email Id:</label><br>
+            <input type="email" name="mail" id="mail"><br><br>
+
+            <label for="pswrd">Password:</label><br>
+            <input type="password" name="password" id="pswrd" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}"><br><br>
+
+            <label for="phone">Phone Number:</label><br>
+            <input type="tell" name="phone" id="phone" pattern="[0-9]{10}"><br><br>
+
+            <label for="age">Age:</label><br>
+            <input type="number" name="age" id="age"><br><br>
+
+            <label for="dob">Birth Date:</label><br>
+            <input type="date" name="dob" id="dob"><br><br>
+
+            <label for="pic">Your photo for ID:</label><br>
+            <input type="file" src="" alt="img-selected"><br><br>
+
+            <label for="gender">Gender:</label><br>
+            <input type="radio" name="emp_gender" id="fm"> <label for="fm">Female</label>
+            <input type="radio" name="emp_gender" id="m"> <label for="m">Male</label>
+        </fieldset><br><br>
+
+        <fieldset>
+            <legend>Educational Background of the Employee</legend>
+            <label for="uni">Which was your university?</label><br>
+            <input type="search" id="uni"><br><br>
+
+            <label for="crse" name="emp_crse">Which course did you study?</label><br>
+            <select>
+                <optgroup label="B.E. / B. TECH">
+                    <option value="Mechanical_Engineering">Mechanical Engineering</option>
+                    <option value="Chemical_Engineering">Chemical Engineering</option>
+                    <option value="Computer_Science_Engineering">Computer Science Engineering</option>
+                    <option value="Electrical_Engineering">Electrical Engineering</option>
+                    <option value="IT">IT</option>
+                    <option value="ICT">ICT</option>
+                    <option value="Civil_Engineering">Civil Engineering</option>
+                    <option value="CSE_AL_ML">CSE AI ML</option>
+                    <option value="CSE_AL_DS">CSE AI DS</option>
+                    <option value="CSE_AL">CSE AI</option>
+                    <option value="CSE_CS">CSE CS</option>
+                    <option value="CSE_IOT">CSE IOT</option>
+                    <option value="Computer_Engineering">Computer Engineering</option>
+                </optgroup>
+                <optgroup label="LAW">
+                    <option value="BBA">BBA</option>
+                    <option value="MBA">MBA</option>
+                    <option value="BA">BA</option>
+                    <option value="MA">MA</option>
+                </optgroup>
+                <optgroup label="Others">
+                    <option value="BCA">BCA</option>
+                    <option value="MCA">MCA</option>
+                </optgroup>
+            </select><br><br>
+
+            <label for="prtflo">Portfolio link:</label><br>
+            <input type="url" name="prtflo" id="prtflo" name="emp_prtflo"><br><br>
+
+            <label for="yrs_exp">Years of experience:</label><br>
+            <input type="number" name="emp_yrs_exo" id="yrs_exp"><br><br>
+
+            <input type="checkbox" name="trns" id="trns">
+            <label for="trns">I agree to <a href="#">terms and conditions</a>.</label>
+
+        </fieldset><br><br>
+
+        <fieldset>
+            <legend>About Employee</legend>
+            <label for="hbs">Hobbies:</label><br>
+            <input type="text" name="hobbies" id="hbs"><br><br>
+
+            <label for="bio">Tell us about yourself:</label><br>
+            <textarea name="bio" id="bio" cols="25"
+                rows="5">For example, I like spending time in nature</textarea><br><br>
+            <input type="button" value="Submit">
+        </fieldset>
+    </form>
+</body>
+
+</html>
