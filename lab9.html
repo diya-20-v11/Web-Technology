@@ -1,0 +1,173 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wisteria | Shop</title>
+
+    <!-- Bootstrap 4 CSS -->
+    <link rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <style>
+        body {
+            background-color: #F7F1E7;
+            color: #292D2A;
+        }
+
+        .navbar, footer {
+            background-color: #315B4C;
+            color: #F7F1E7;
+        }
+
+        .navbar-brand, .navbar-text {
+            color: #F7F1E7 !important;
+        }
+
+        .heading {
+            color: #315B4C;
+        }
+
+        .product-img {
+            height: 230px;
+            object-fit: cover;
+        }
+
+        .price {
+            color: #A84943;
+        }
+
+        .btn-shop {
+            background-color: #315B4C;
+            color: white;
+        }
+
+        .btn-shop:hover {
+            background-color: #A84943;
+            color: white;
+        }
+
+        .card, .checkout-box {
+            background-color: #FFFCF6;
+            border-color: #D8CFC0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand navbar-dark">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold" href="#">WISTERIA</a>
+            <span class="navbar-text">Simple things, beautiful living.</span>
+        </div>
+    </nav>
+
+    <!-- Product Listing -->
+    <section class="container my-5">
+        <h2 class="heading text-center font-weight-bold">Our Collection</h2>
+        <p class="text-center text-muted mb-4">
+            Find something special for yourself.
+        </p>
+
+        <div class="row justify-content-center">
+            <div class="col-md-5 col-lg-4 mb-4">
+                <div class="card h-100">
+                    <img
+                    src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=600"
+                    class="card-img-top product-img"
+                    alt="Aesthetic notebook">
+
+                    <div class="card-body">
+                        <h5 class="card-title">Wisteria Journal</h5>
+                        <p class="card-text text-muted">
+                            A simple journal for your thoughts and ideas.
+                        </p>
+                        <h5 class="price font-weight-bold">₹399</h5>
+                        <a href="#checkout" class="btn btn-shop btn-block">
+                            Add to Cart
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Summary -->
+    <section class="container mb-5">
+        <div class="card checkout-box">
+            <div class="card-body">
+                <h4 class="heading">Your Cart</h4>
+
+                <div class="d-flex justify-content-between my-3">
+                    <span>Wisteria Journal × 1</span>
+                    <span>₹399</span>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <strong>Total</strong>
+                    <strong>₹399</strong>
+                </div>
+
+                <a href="#checkout" class="btn btn-shop mt-3">
+                    Proceed to Checkout
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Form -->
+    <section class="container mb-5" id="checkout">
+        <div class="card checkout-box">
+            <div class="card-body">
+                <h4 class="heading mb-4">Checkout</h4>
+
+                <form>
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" class="form-control"
+                        id="name" placeholder="Enter your name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" class="form-control"
+                        id="email" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="address">Delivery Address</label>
+                        <textarea class="form-control" id="address"
+                        rows="3" placeholder="Enter your address"
+                        required></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="payment">Payment Method</label>
+                        <select class="form-control" id="payment" required>
+                            <option value="">Choose payment method</option>
+                            <option>Cash on Delivery</option>
+                            <option>UPI</option>
+                            <option>Credit/Debit Card</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-shop btn-block">
+                        Place Order — ₹399
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="text-center p-3">
+        <p class="mb-0">Wisteria | Made with simplicity ♡</p>
+    </footer>
+
+</body>
+</html>
