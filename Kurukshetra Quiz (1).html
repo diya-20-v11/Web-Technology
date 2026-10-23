@@ -1,0 +1,636 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Kurukshetra Quiz</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Yatra+One&display=swap">
+<style>
+/* Layout: a single 920px column. Title screen is a full-width chariot scene with the intro text beneath, left aligned.
+   Quiz and result screens are a paper card over a fixed battlefield silhouette (spears, banners, war elephants). */
+:root {
+  --bg: #E4D1A6;
+  --paper: #F0E3C2;
+  --paper-2: #EADBB5;
+  --ink: #33220F;
+  --ink-soft: #6B5230;
+  --saffron: #C98A2B;
+  --saffron-deep: #9A6314;
+  --rust: #9C3F20;
+  --rust-text: #9C3F20;
+  --bronze: #7B5A2C;
+  --line: #C9B07C;
+  --seg: #D2BB8D;
+  --good: #5E7A33;
+  --good-text: #476322;
+  --on-accent: #FFF6E0;
+  --sil: #3B2712;
+  --sil-far: #8A6A3A;
+  --sky1: #EBD9AE;
+  --sky2: #DBA95C;
+  --sun: #C9772A;
+  --display: 'Yatra One', 'Noto Sans Devanagari', 'Noto Serif Devanagari', Georgia, serif;
+  --body: 'Spectral', Georgia, 'Times New Roman', serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #1B130D;
+    --paper: #2A1D13;
+    --paper-2: #33241A;
+    --ink: #F1E2BF;
+    --ink-soft: #C2A878;
+    --saffron: #D99A3E;
+    --saffron-deep: #E5AE5A;
+    --rust: #B84B2D;
+    --rust-text: #E58466;
+    --bronze: #B98F55;
+    --line: #4D3925;
+    --seg: #4A3824;
+    --good: #7C9F4A;
+    --good-text: #A3C970;
+    --on-accent: #FFF6E0;
+    --sil: #0E0905;
+    --sil-far: #4A3520;
+    --sky1: #2B1D12;
+    --sky2: #7A4A1E;
+    --sun: #E0A24A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #1B130D;
+  --paper: #2A1D13;
+  --paper-2: #33241A;
+  --ink: #F1E2BF;
+  --ink-soft: #C2A878;
+  --saffron: #D99A3E;
+  --saffron-deep: #E5AE5A;
+  --rust: #B84B2D;
+  --rust-text: #E58466;
+  --bronze: #B98F55;
+  --line: #4D3925;
+  --seg: #4A3824;
+  --good: #7C9F4A;
+  --good-text: #A3C970;
+  --on-accent: #FFF6E0;
+  --sil: #0E0905;
+  --sil-far: #4A3520;
+  --sky1: #2B1D12;
+  --sky2: #7A4A1E;
+  --sun: #E0A24A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 1.0625rem;
+  line-height: 1.55;
+  padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 20px 40px;
+}
+#root { position: relative; z-index: 1; max-width: 920px; margin-inline: auto; }
+[hidden] { display: none !important; }
+
+/* battlefield behind the questions */
+.bf {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  height: min(44vh, 360px);
+  z-index: 0; pointer-events: none;
+}
+.bf svg { display: block; width: 100%; height: 100%; }
+#root[data-screen="title"] ~ .bf { display: none; }
+
+/* buttons */
+.btn {
+  font: 600 1.05rem/1 var(--body);
+  background: var(--rust);
+  color: var(--on-accent);
+  border: 0;
+  border-radius: 6px;
+  padding: 0.95rem 1.6rem;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+.btn:hover { background: color-mix(in srgb, var(--rust) 85%, var(--ink)); }
+button:focus-visible, summary:focus-visible, h2:focus-visible {
+  outline: 3px solid var(--saffron-deep);
+  outline-offset: 3px;
+}
+h2:focus { outline: none; }
+h2:focus-visible { outline: 3px solid var(--saffron-deep); }
+
+/* title screen */
+.art {
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--sky1);
+}
+.art svg { display: block; width: 100%; height: auto; }
+.flag { transform-origin: 540px 167px; animation: sway 3.4s ease-in-out infinite alternate; }
+@keyframes sway { from { transform: skewY(-3deg); } to { transform: skewY(3deg); } }
+.intro { padding-block: 28px 8px; max-width: 38rem; }
+.intro h1 {
+  margin: 0;
+  font: 400 clamp(2.5rem, 9vw, 4.1rem)/1.02 var(--display);
+  letter-spacing: 0.005em;
+  text-wrap: balance;
+}
+.intro .dev {
+  display: block;
+  margin-top: 0.45rem;
+  font-size: 0.42em;
+  line-height: 1.2;
+  color: var(--bronze);
+  letter-spacing: 0.02em;
+}
+.lede { margin: 1.3rem 0 1.6rem; font-size: 1.2rem; line-height: 1.5; color: var(--ink); }
+.note { margin: 1rem 0 0; color: var(--ink-soft); font-size: 0.95rem; }
+
+/* quiz screen */
+.hud { margin-bottom: 14px; }
+.segs { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; }
+.segs li { height: 8px; border-radius: 2px; background: var(--seg); }
+.segs li.now { background: var(--saffron); }
+.segs li.correct { background: var(--good); }
+.segs li.wrong { background: var(--rust); }
+.segs li.neutral { background: var(--bronze); }
+.hud-row {
+  display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+  margin-top: 10px; color: var(--ink-soft); font-size: 0.98rem;
+}
+.hud-row strong { color: var(--ink); font: 400 1.35rem/1 var(--display); font-variant-numeric: tabular-nums; }
+
+.card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: clamp(18px, 4vw, 34px);
+}
+#qtext {
+  margin: 0 0 1.4rem;
+  font: 600 clamp(1.3rem, 3.6vw, 1.65rem)/1.35 var(--body);
+  text-wrap: balance;
+  max-width: 40rem;
+}
+.opts { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.opt {
+  display: grid; grid-template-columns: 2rem minmax(0, 1fr) 1.4rem; align-items: center; gap: 0.85rem;
+  width: 100%;
+  text-align: left;
+  font: 500 1.05rem/1.35 var(--body);
+  color: var(--ink);
+  background: var(--paper-2);
+  border: 1.5px solid var(--line);
+  border-radius: 6px;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+.opt:hover:not([aria-disabled="true"]) { border-color: var(--saffron); background: var(--paper); }
+.opt[aria-disabled="true"] { cursor: default; }
+.opt .key {
+  display: grid; place-items: center;
+  width: 2rem; height: 2rem; border-radius: 50%;
+  border: 1.5px solid var(--bronze);
+  color: var(--bronze);
+  font: 600 0.95rem/1 var(--body);
+}
+.opt .mark { font-weight: 700; text-align: center; }
+.opt.dim { opacity: 0.75; }
+.opt.correct { border-color: var(--good); background: color-mix(in srgb, var(--good) 16%, var(--paper)); }
+.opt.correct .key { background: var(--good); border-color: var(--good); color: var(--on-accent); }
+.opt.correct .mark { color: var(--good-text); }
+.opt.correct .mark::before { content: "\2713"; }
+.opt.wrong { border-color: var(--rust); background: color-mix(in srgb, var(--rust) 14%, var(--paper)); }
+.opt.wrong .key { background: var(--rust); border-color: var(--rust); color: var(--on-accent); }
+.opt.wrong .mark { color: var(--rust-text); }
+.opt.wrong .mark::before { content: "\2715"; }
+.opt.picked { border-color: var(--bronze); background: var(--paper); }
+.opt.picked .key { background: var(--bronze); color: var(--paper); }
+
+.fb { margin-top: 1.3rem; padding: 1rem 1.1rem; background: var(--paper-2); border-radius: 6px; }
+.fb:empty { display: none; }
+.fb p { margin: 0; max-width: 40rem; }
+.fb .status { font: 400 1.25rem/1.2 var(--display); margin-bottom: 0.4rem; }
+.fb .status.correct { color: var(--good-text); }
+.fb .status.wrong { color: var(--rust-text); }
+.fb .status.neutral { color: var(--ink-soft); }
+.fb .ref { margin-top: 0.55rem; font-style: italic; color: var(--ink-soft); font-size: 0.97rem; }
+.actions { display: flex; justify-content: flex-end; margin-top: 1.2rem; }
+.actions:empty, .actions:has(> [hidden]:only-child) { display: none; }
+
+/* result screen */
+.result { display: flex; flex-wrap: wrap; gap: 28px 40px; align-items: center; }
+.ring-wrap { flex: 0 0 auto; width: 170px; max-width: 100%; }
+.ring { display: block; width: 100%; height: auto; }
+.ring .track { fill: none; stroke: var(--seg); stroke-width: 12; }
+.ring .arc { fill: none; stroke: var(--saffron); stroke-width: 12; stroke-linecap: round; transition: stroke-dashoffset 1s cubic-bezier(0.2, 0.7, 0.2, 1); }
+.ring .big { font: 400 54px/1 var(--display); fill: var(--ink); }
+.ring .of { font: 500 14px/1 var(--body); fill: var(--ink-soft); }
+.verdict { flex: 1 1 18rem; min-width: 0; }
+.verdict h2 { margin: 0 0 0.5rem; font: 400 clamp(1.9rem, 6vw, 2.6rem)/1.1 var(--display); }
+.verdict p { margin: 0 0 0.8rem; max-width: 34rem; }
+.verdict .small { font-size: 0.95rem; color: var(--ink-soft); }
+.verdict .segs { margin: 1.1rem 0 0.4rem; max-width: 26rem; }
+.review { margin-top: 18px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; padding: 14px clamp(18px, 4vw, 34px); }
+.review summary { cursor: pointer; font-weight: 600; padding: 4px 0; }
+.review ol { margin: 14px 0 6px; padding-left: 1.4rem; display: grid; gap: 14px; }
+.review li { padding-left: 0.3rem; }
+.review .rq { margin: 0 0 0.2rem; font-weight: 600; }
+.review .ra { margin: 0; font-size: 0.97rem; color: var(--ink-soft); }
+.review .ra .ok { color: var(--good-text); font-weight: 600; }
+.review .ra .no { color: var(--rust-text); font-weight: 600; }
+
+@media (prefers-reduced-motion: reduce) {
+  .flag { animation: none; }
+  .ring .arc, .opt, .btn { transition: none; }
+}
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="legsA" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 48 L34 80"/>
+      <path d="M52 50 L50 66 L60 70"/>
+      <path d="M78 50 L84 80"/>
+      <path d="M88 46 L100 62 L106 72"/>
+    </g>
+    <g id="legsB" fill="none" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M40 48 L28 64 L20 70"/>
+      <path d="M52 50 L52 80"/>
+      <path d="M78 50 L90 66 L96 74"/>
+      <path d="M88 46 L86 80"/>
+    </g>
+    <g id="horseBody">
+      <ellipse cx="62" cy="38" rx="32" ry="15"/>
+      <path d="M38 30 Q26 22 22 6 L33 2 Q42 20 56 28 Z"/>
+      <path d="M22 6 L5 17 Q2 21 6 23 L10 22 L26 12 L33 2 Z"/>
+      <path d="M30 3 L32 -5 L36 2 Z"/>
+      <path d="M93 32 Q110 36 104 62 Q102 68 100 70" fill="none" stroke-width="5" stroke-linecap="round"/>
+    </g>
+    <g id="horseA"><use href="#horseBody"/><use href="#legsA"/></g>
+    <g id="horseB"><use href="#horseBody"/><use href="#legsB"/></g>
+    <g id="ele">
+      <ellipse cx="46" cy="36" rx="34" ry="22"/>
+      <circle cx="84" cy="28" r="17"/>
+      <path d="M92 36 Q106 46 100 66 Q98 72 93 70" fill="none" stroke-width="8" stroke-linecap="round"/>
+      <path d="M12 30 Q4 40 8 52" fill="none" stroke-width="3" stroke-linecap="round"/>
+      <rect x="30" y="8" width="32" height="12"/>
+      <path d="M28 8 L46 -4 L64 8 Z"/>
+      <g stroke-width="9" stroke-linecap="round">
+        <line x1="24" y1="50" x2="24" y2="74"/>
+        <line x1="38" y1="54" x2="38" y2="74"/>
+        <line x1="58" y1="54" x2="58" y2="74"/>
+        <line x1="70" y1="50" x2="70" y2="74"/>
+      </g>
+    </g>
+  </defs>
+</svg>
+
+<div id="root" data-screen="title">
+
+  <section id="screen-title">
+    <figure class="art">
+      <svg viewBox="0 0 800 440" role="img" aria-label="Silhouette of Krishna and Arjuna in a chariot drawn by four horses, against a setting sun over the Kurukshetra battlefield">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--sky1)"/>
+            <stop offset="1" style="stop-color:var(--sky2)"/>
+          </linearGradient>
+          <linearGradient id="dust" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" style="stop-color:var(--sky2)" stop-opacity="0"/>
+            <stop offset="1" style="stop-color:var(--sky2)" stop-opacity="0.85"/>
+          </linearGradient>
+        </defs>
+        <rect width="800" height="440" fill="url(#sky)"/>
+        <circle cx="430" cy="232" r="205" style="fill:var(--sun)" opacity="0.12"/>
+        <circle cx="430" cy="232" r="165" style="fill:var(--sun)" opacity="0.2"/>
+        <circle cx="430" cy="232" r="120" style="fill:var(--sun)" opacity="0.95"/>
+
+        <g id="far" style="fill:var(--sil-far);stroke:var(--sil-far)" opacity="0.6"></g>
+        <rect y="318" width="800" height="72" fill="url(#dust)"/>
+
+        <g style="fill:var(--sil);stroke:var(--sil)" stroke-linecap="round" stroke-linejoin="round">
+          <!-- four horses, drawn left to right -->
+          <use href="#horseA" transform="translate(-6 291) scale(1.2)"/>
+          <use href="#horseB" transform="translate(64 291) scale(1.2)"/>
+          <use href="#horseA" transform="translate(134 291) scale(1.2)"/>
+          <use href="#horseB" transform="translate(204 291) scale(1.2)"/>
+          <!-- yoke pole and reins -->
+          <path d="M236 318 L392 316" fill="none" stroke-width="3"/>
+          <path d="M434 266 Q344 276 262 304" fill="none" stroke-width="1.6"/>
+
+          <!-- chariot body -->
+          <path d="M388 292 L544 292 L536 338 L404 338 Q388 338 388 322 Z" stroke="none"/>
+          <path d="M388 292 Q388 268 368 258" fill="none" stroke-width="5"/>
+          <path d="M393 306 L540 306" fill="none" stroke-width="3" style="stroke:var(--saffron)"/>
+          <!-- wheel -->
+          <g transform="translate(470 336)" fill="none">
+            <circle r="54" stroke-width="7"/>
+            <circle r="9" style="fill:var(--sil)" stroke="none"/>
+            <g stroke-width="3">
+              <line x1="-54" y1="0" x2="54" y2="0"/>
+              <line x1="-54" y1="0" x2="54" y2="0" transform="rotate(22.5)"/>
+              <line x1="-54" y1="0" x2="54" y2="0" transform="rotate(45)"/>
+              <line x1="-54" y1="0" x2="54" y2="0" transform="rotate(67.5)"/>
+              <line x1="-54" y1="0" x2="54" y2="0" transform="rotate(90)"/>
+              <line x1="-54" y1="0" x2="54" y2="0" transform="rotate(112.5)"/>
+              <line x1="-54" y1="0" x2="54" y2="0" transform="rotate(135)"/>
+              <line x1="-54" y1="0" x2="54" y2="0" transform="rotate(157.5)"/>
+            </g>
+          </g>
+
+          <!-- Krishna, holding the reins -->
+          <g stroke="none">
+            <path d="M413 292 L417 254 Q424 245 431 254 L435 292 Z"/>
+            <circle cx="424" cy="241" r="9"/>
+            <path d="M415 235 L418 224 L424 229 L430 224 L433 235 Z"/>
+          </g>
+          <path d="M424 222 Q428 212 434 204" fill="none" stroke-width="1.8"/>
+          <ellipse cx="435" cy="202" rx="3.6" ry="6" stroke="none" transform="rotate(25 435 202)" style="fill:var(--saffron)"/>
+          <path d="M430 262 L434 266" fill="none" stroke-width="4"/>
+
+          <!-- Arjuna, bow in hand -->
+          <g stroke="none">
+            <path d="M481 292 L484 250 Q492 242 500 250 L503 292 Z"/>
+            <circle cx="492" cy="237" r="9"/>
+            <path d="M482 235 Q492 216 502 235 Z"/>
+          </g>
+          <path d="M498 260 L522 262" fill="none" stroke-width="4"/>
+          <path d="M522 220 Q552 262 522 304" fill="none" stroke-width="3.2"/>
+          <path d="M522 220 L522 304" fill="none" stroke-width="1"/>
+
+          <!-- flag -->
+          <path d="M540 292 L540 148" fill="none" stroke-width="3"/>
+          <g class="flag" stroke="none">
+            <path d="M541 150 L612 164 L541 186 Z"/>
+          </g>
+        </g>
+        <rect y="388" width="800" height="52" style="fill:var(--sil)"/>
+      </svg>
+    </figure>
+    <div class="intro">
+      <h1>Kurukshetra Quiz <span class="dev" lang="sa">श्रीमद्भगवद्गीता</span></h1>
+      <p class="lede">Ten questions on the Bhagavad Gita, set on the field where Krishna spoke to Arjuna.</p>
+      <button type="button" class="btn" id="start">Begin the quiz</button>
+      <p class="note">One question at a time. Each answer comes with its verse.</p>
+    </div>
+  </section>
+
+  <section id="screen-quiz" hidden>
+    <div class="hud">
+      <ol class="segs" id="segs" aria-hidden="true"></ol>
+      <div class="hud-row">
+        <span id="qnum"></span>
+        <span>Score <strong id="score">0</strong></span>
+      </div>
+    </div>
+    <div class="card">
+      <h2 id="qtext" tabindex="-1"></h2>
+      <ul class="opts" id="opts"></ul>
+      <div class="fb" id="fb" role="status"></div>
+      <div class="actions"><button type="button" class="btn" id="next" hidden>Next question</button></div>
+    </div>
+  </section>
+
+  <section id="screen-result" hidden>
+    <div class="card result">
+      <div class="ring-wrap">
+        <svg class="ring" viewBox="0 0 160 160" id="ring" role="img" aria-label="">
+          <circle class="track" cx="80" cy="80" r="66"/>
+          <circle class="arc" id="arc" cx="80" cy="80" r="66" transform="rotate(-90 80 80)" stroke-dasharray="414.69" stroke-dashoffset="414.69"/>
+          <text class="big" id="ringScore" x="80" y="90" text-anchor="middle"></text>
+          <text class="of" id="ringOf" x="80" y="114" text-anchor="middle"></text>
+        </svg>
+      </div>
+      <div class="verdict">
+        <h2 id="rtitle" tabindex="-1"></h2>
+        <p id="rmsg"></p>
+        <p class="small" id="rnote"></p>
+        <ol class="segs" id="rsegs" role="img" aria-label="Your result for each question"></ol>
+        <div class="actions" style="justify-content:flex-start"><button type="button" class="btn" id="again">Play again</button></div>
+      </div>
+    </div>
+    <details class="review">
+      <summary>Review every answer</summary>
+      <ol id="rlist"></ol>
+    </details>
+  </section>
+</div>
+
+<div class="bf" aria-hidden="true">
+  <svg id="bgSvg" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice"></svg>
+</div>
+
+<script>
+(function () {
+  var Q = [
+    { q: "How many Adhyaay (chapters) are there in the Bhagavad Gita?",
+      o: ["18", "24", "8", "20"], a: 0, ref: "Structure of the Gita",
+      e: "The Bhagavad Gita has 18 chapters, covering Lord Krishna's teachings to Arjuna." },
+    { q: "Who is narrating the Kurukshetra war to Dhritarashtra in the palace?",
+      o: ["Vidur", "Gandhari", "Sanjay", "Maharshi Vyas"], a: 2, ref: "Bhagavad Gita 1.1",
+      e: "In the opening verse, Dhritarashtra asks Sanjay what happened when his sons and the sons of Pandu assembled at Kurukshetra. Sanjay describes the war to him." },
+    { q: "Who was the first to receive the knowledge of the Bhagavad Gita from Lord Krishna?",
+      o: ["Surya Dev", "Arjun", "Sanjay", "Vidur"], a: 0, ref: "Bhagavad Gita 4.1",
+      e: "Krishna says He first taught this imperishable science of yoga to Vivasvan, the sun-god, who passed it on to Manu." },
+    { q: "How much time did Lord Krishna take to deliver the knowledge of the Bhagavad Gita to Arjun on the battlefield of Kurukshetra?",
+      o: ["2 hours", "1 hour", "50 minutes", "45 minutes"], a: 3, ref: "Traditional account, not a verse",
+      e: "Krishna spoke the Gita to Arjuna in about 45 minutes. This duration comes from tradition; the verses themselves do not state it." },
+    { q: "Which chapter of the Bhagavad Gita contains the famous description of the Vishwaroopa Darshana?",
+      o: ["Chapter 4", "Chapter 7", "Chapter 11", "Chapter 18"], a: 2, ref: "Chapter 11, The Universal Form",
+      e: "Chapter 11 describes Arjuna's vision of Lord Krishna's universal form." },
+    { q: "According to the Bhagavad Gita, what is eternal and cannot be destroyed by the death of the body?",
+      o: ["Wealth", "The physical body", "The soul (Atman)", "Fame"], a: 2, ref: "Bhagavad Gita 2.20",
+      e: "Krishna explains that the soul is unborn, eternal and everlasting, and is not destroyed when the body is destroyed." },
+    { q: "Which chapter of the Bhagavad Gita is known as Karma Yoga?",
+      o: ["Chapter 2", "Chapter 3", "Chapter 6", "Chapter 12"], a: 1, ref: "Chapter 3, Karma-yoga",
+      e: "Chapter 3 is titled Karma-yoga and explains the importance of performing one's prescribed duties." },
+    { q: "What does Lord Krishna teach Arjuna about performing his duties?",
+      o: ["Avoid all responsibilities", "Perform duties without attachment to the results", "Work only for personal gain", "Give up all action"], a: 1, ref: "Bhagavad Gita 2.47",
+      e: "Krishna instructs Arjuna to perform his prescribed duty without attachment to its fruits, and without becoming attached to inaction." },
+    { q: "What does Lord Krishna teach about happiness and sorrow?",
+      o: ["Happiness should be pursued at any cost", "Sorrow lasts forever", "Both should be faced with balance and equanimity", "A wise person never experiences sorrow"], a: 2, ref: "Bhagavad Gita 2.14",
+      e: "Krishna explains that happiness and distress are temporary, and teaches Arjuna to tolerate them without being disturbed." },
+    { q: "According to the Bhagavad Gita, which of these is considered the greatest obstacle to wisdom?",
+      o: ["Self-control", "Compassion", "Uncontrolled desire", "Patience"], a: 2, ref: "Bhagavad Gita 3.39",
+      e: "Krishna explains that uncontrolled desire covers knowledge and acts as an eternal enemy of the living being." }
+  ];
+  var LETTERS = "abcd";
+  var SCORED = Q.filter(function (q) { return !q.unscored; }).length;
+  var state = { i: 0, score: 0, answers: [], locked: false };
+
+  function $(id) { return document.getElementById(id); }
+
+  /* ---------- battlefield silhouettes ---------- */
+  function rng(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function spears(W, base, o) {
+    var r = rng(o.seed), x = -10, out = "";
+    while (x < W + 10) {
+      var h = o.min + r() * (o.max - o.min);
+      var lean = (r() - 0.5) * 14;
+      var tx = x + lean, ty = base - h;
+      out += '<line x1="' + x + '" y1="' + base + '" x2="' + tx.toFixed(1) + '" y2="' + ty.toFixed(1) + '" stroke-width="' + o.sw + '"/>';
+      out += '<path stroke="none" d="M' + (tx - 3).toFixed(1) + ' ' + (ty + 2).toFixed(1) + ' L' + tx.toFixed(1) + ' ' + (ty - 12).toFixed(1) + ' L' + (tx + 3).toFixed(1) + ' ' + (ty + 2).toFixed(1) + 'Z"/>';
+      if (r() < 0.4) {
+        out += '<path stroke="none" d="M' + tx.toFixed(1) + ' ' + (ty + 4).toFixed(1) + ' l' + o.flag + ' 5 l-' + o.flag + ' 8 Z"/>';
+      }
+      x += o.gap * (0.6 + r() * 0.8);
+    }
+    return out;
+  }
+  function elephant(x, base, s) {
+    return '<use href="#ele" transform="translate(' + x + ' ' + (base - 76 * s).toFixed(1) + ') scale(' + s + ')"/>';
+  }
+  $("far").innerHTML =
+    spears(800, 380, { seed: 7, min: 40, max: 120, gap: 15, sw: 2, flag: 16 }) +
+    elephant(610, 380, 0.8) + elephant(700, 380, 0.62);
+  $("bgSvg").innerHTML =
+    '<g style="fill:var(--bronze);stroke:var(--bronze)" stroke-linecap="round" opacity="0.16">' +
+    spears(1200, 300, { seed: 21, min: 50, max: 190, gap: 20, sw: 2.2, flag: 20 }) +
+    elephant(170, 300, 1.15) + elephant(600, 300, 1.35) + elephant(980, 300, 1.1) +
+    '<rect x="0" y="296" width="1200" height="4" stroke="none"/></g>';
+
+  /* ---------- screens ---------- */
+  var screens = { title: $("screen-title"), quiz: $("screen-quiz"), result: $("screen-result") };
+  function go(name) {
+    for (var k in screens) screens[k].hidden = (k !== name);
+    document.getElementById("root").setAttribute("data-screen", name);
+    window.scrollTo(0, 0);
+  }
+
+  /* ---------- quiz ---------- */
+  function segs(final) {
+    return Q.map(function (q, k) {
+      var a = state.answers[k], c = "";
+      if (a) c = a.status; else if (!final && k === state.i) c = "now";
+      return '<li class="' + c + '"></li>';
+    }).join("");
+  }
+
+  function showQuestion() {
+    var q = Q[state.i];
+    state.locked = false;
+    $("qnum").textContent = "Question " + (state.i + 1) + " of " + Q.length;
+    $("score").textContent = state.score;
+    $("qtext").textContent = q.q;
+    $("opts").innerHTML = q.o.map(function (t, k) {
+      return '<li><button type="button" class="opt" data-k="' + k + '">' +
+        '<span class="key">' + LETTERS[k] + '</span><span class="txt">' + t + '</span><span class="mark" aria-hidden="true"></span></button></li>';
+    }).join("");
+    $("fb").innerHTML = "";
+    $("next").hidden = true;
+    $("segs").innerHTML = segs(false);
+    $("qtext").focus({ preventScroll: true });
+  }
+
+  function choose(k) {
+    if (state.locked) return;
+    state.locked = true;
+    var q = Q[state.i], status, label;
+    if (q.unscored) { status = "neutral"; label = "Not scored"; }
+    else if (k === q.a) { status = "correct"; label = "Correct"; state.score++; }
+    else { status = "wrong"; label = "Not quite"; }
+    state.answers[state.i] = { choice: k, status: status };
+
+    var btns = $("opts").querySelectorAll(".opt");
+    btns.forEach(function (b, idx) {
+      b.setAttribute("aria-disabled", "true");
+      if (q.unscored) {
+        if (idx === k) b.classList.add("picked"); else b.classList.add("dim");
+      } else if (idx === q.a) {
+        b.classList.add("correct");
+      } else if (idx === k) {
+        b.classList.add("wrong");
+      } else {
+        b.classList.add("dim");
+      }
+    });
+
+    var body = q.e;
+    if (status === "wrong") body = "The answer is " + LETTERS[q.a] + ") " + q.o[q.a] + ". " + q.e;
+    $("fb").innerHTML = '<p class="status ' + status + '">' + label + '</p><p>' + body + '</p><p class="ref">' + q.ref + '</p>';
+    $("score").textContent = state.score;
+    $("segs").innerHTML = segs(false);
+
+    var last = state.i === Q.length - 1;
+    $("next").textContent = last ? "See result" : "Next question";
+    $("next").hidden = false;
+    $("next").focus({ preventScroll: true });
+    $("next").scrollIntoView({ block: "nearest", behavior: "smooth" });
+  }
+
+  function next() {
+    state.i++;
+    if (state.i < Q.length) showQuestion(); else showResult();
+  }
+
+  function start() {
+    state = { i: 0, score: 0, answers: [], locked: false };
+    go("quiz");
+    showQuestion();
+  }
+
+  /* ---------- result ---------- */
+  function showResult() {
+    var s = state.score, pct = s / SCORED, title, msg;
+    if (s === SCORED) { title = "Full marks"; msg = "You know this field well. Every answer was right."; }
+    else if (s >= 7) { title = "Well done"; msg = "Your knowledge of the Gita stands firm. A few verses are worth another look."; }
+    else if (s >= 5) { title = "A steady start"; msg = "You have the shape of it. Read the explanations below and try again."; }
+    else { title = "The battle has begun"; msg = "Arjuna began with questions too. Review the answers and take another turn."; }
+
+    $("rtitle").textContent = title;
+    $("rmsg").textContent = msg;
+    $("rnote").textContent = "";
+    $("ringScore").textContent = s;
+    $("ringOf").textContent = "of " + SCORED;
+    $("ring").setAttribute("aria-label", "You scored " + s + " out of " + SCORED);
+    $("rsegs").innerHTML = segs(true);
+
+    $("rlist").innerHTML = Q.map(function (q, k) {
+      var a = state.answers[k];
+      var mine = q.o[a.choice];
+      var line;
+      if (a.status === "correct") line = '<span class="ok">Correct.</span> You chose ' + LETTERS[a.choice] + ') ' + mine + '.';
+      else if (a.status === "wrong") line = '<span class="no">Missed.</span> You chose ' + LETTERS[a.choice] + ') ' + mine + '. Answer: ' + LETTERS[q.a] + ') ' + q.o[q.a] + '.';
+      else line = 'You chose ' + LETTERS[a.choice] + ') ' + mine + '. Not scored.';
+      return '<li><p class="rq">' + q.q + '</p><p class="ra">' + line + '</p></li>';
+    }).join("");
+    document.querySelector(".review").open = false;
+
+    var arc = $("arc"), C = 414.69;
+    arc.style.strokeDashoffset = C;
+    go("result");
+    $("rtitle").focus({ preventScroll: true });
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () { arc.style.strokeDashoffset = (C * (1 - pct)).toFixed(2); });
+    });
+  }
+
+  /* ---------- events ---------- */
+  $("start").addEventListener("click", start);
+  $("again").addEventListener("click", start);
+  $("next").addEventListener("click", next);
+  $("opts").addEventListener("click", function (e) {
+    var b = e.target.closest(".opt");
+    if (b) choose(+b.getAttribute("data-k"));
+  });
+  document.addEventListener("keydown", function (e) {
+    if (screens.quiz.hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+    var k = LETTERS.indexOf(e.key.toLowerCase());
+    if (k < 0 && /^[1-4]$/.test(e.key)) k = +e.key - 1;
+    if (k >= 0 && k < Q[state.i].o.length && !state.locked) { choose(k); }
+  });
+})();
+</script>
+
+</body></html>
